@@ -110,7 +110,7 @@ public:
 	void set_title(const std::string new_value);
 
 private:
-	static constexpr auto default_title = "        v1.1.1"; // TODO: Move the version somewhere
+	static constexpr auto default_title = "";
 	
 	NavigationView& nav_;
 
@@ -180,7 +180,7 @@ private:
 		Color::dark_grey()
 	};
 	
-	Image image_clock_status {
+	ImageButton button_clock_status {
 		{ 27 * 8, 0 * 16,  2 * 8, 1 * 16 },
 		&bitmap_icon_clk_int,
 		Color::light_grey(),
@@ -198,6 +198,7 @@ private:
 	void on_camera();
 	void on_title();
 	void refresh();
+	void on_clk();
 	
 	MessageHandlerRegistration message_handler_refresh {
 		Message::ID::StatusRefresh,
@@ -205,6 +206,29 @@ private:
 			(void)p;
 			this->refresh();
 		}
+	};
+};
+
+class InformationView : public View {
+public:
+	InformationView(NavigationView& nav);
+	
+private:
+	static constexpr auto version_string = "v1.3.1";
+	NavigationView& nav_;
+
+	Rectangle backdrop {
+		{ 0, 0 * 16, 240, 16 },
+		{33, 33, 33}
+	};
+
+	Text version {
+		{2, 0, 11 * 8, 16},
+		version_string
+	};
+	
+	LiveDateTime ltime {
+		{174, 0, 8 * 8, 16}
 	};
 };
 
@@ -262,6 +286,7 @@ public:
 
 private:
 	SystemStatusView status_view { navigation_view };
+	InformationView info_view { navigation_view };
 	NavigationView navigation_view { };
 	Context& context_;
 };
